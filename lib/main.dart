@@ -22,7 +22,7 @@ void main() {
         appBar: AppBar(
           title: const Text('Dice Roll'),
         ),
-        body: DicePage(),
+        body: const DicePage(),
       ),
     ),
   );
@@ -38,25 +38,8 @@ class DicePage extends StatefulWidget {
 class _DicePageState extends State<DicePage>
     with SingleTickerProviderStateMixin {
   int diceNumber = 1;
-  late AnimationController _controller;
-  late Animation<double> _rotationAnimation;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    _rotationAnimation = Tween<double>(begin: 0.5, end: 1).animate(_controller);
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1).animate(_controller);
-  }
 
   void changeDiceFace() {
-    _controller.reset();
-    _controller.forward();
     setState(() {
       diceNumber = Random().nextInt(6);
     });
@@ -68,17 +51,11 @@ class _DicePageState extends State<DicePage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ScaleTransition(
-            scale: _scaleAnimation,
-            child: RotationTransition(
-              turns: _rotationAnimation,
-              child: Image.network(
-                diceImages[diceNumber],
-                height: 150,
-                width: 150,
-                color: Colors.black,
-              ),
-            ),
+          Image.network(
+            diceImages[diceNumber],
+            height: 150,
+            width: 150,
+            color: Colors.black,
           ),
           const SizedBox(height: 50),
           ElevatedButton(
@@ -90,9 +67,4 @@ class _DicePageState extends State<DicePage>
     );
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 }
